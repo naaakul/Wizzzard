@@ -47,12 +47,12 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
             alt="logo"
             width={1000}
             height={1000}
-            className="w-20 mb-10"
+            className="w-16 mb-10"
           ></Image>
-          {pathname === "/auth/register" ? (
+          {pathname === "/auth/signup" ? (
             <>
-              <Link href={"/auth/register"}>
-                <WButton labal={"Register"} />
+              <Link href={"/auth/signup"}>
+                <WButton labal={"Sign up"} />
               </Link>
               <Link href={"/auth/signin"}>
                 <BButton labal={"Sign in"} />
@@ -60,8 +60,8 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
             </>
           ) : (
             <>
-              <Link href={"/auth/register"}>
-                <BButton labal={"Register"} />
+              <Link href={"/auth/signup"}>
+                <BButton labal={"Sign up"} />
               </Link>
               <Link href={"/auth/signin"}>
                 <WButton labal={"Sign in"} />
@@ -72,7 +72,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         </div>
       </div>
 
-      <div className="w-1/2">{children}</div>
+      <div className="w-1/2 px-32 flex justify-center items-center">{children}</div>
     </div>
   );
 }

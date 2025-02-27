@@ -12,32 +12,6 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    // <div className="flex h-screen">
-    //   {/* Left Panel - Navigation Buttons */}
-    //   <div className="w-1/3 bg-gray-900 text-white flex flex-col items-center justify-center space-y-4">
-    //     <Link href="/auth/register">
-    //       <button className="w-40 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg">
-    //         Register
-    //       </button>
-    //     </Link>
-    //     <Link href="/auth/signin">
-    //       <button className="w-40 py-2 bg-green-500 hover:bg-green-600 rounded-lg">
-    //         Sign In
-    //       </button>
-    //     </Link>
-    //     <Link href="/dashboard">
-    //       <button className="w-40 py-2 bg-gray-700 hover:bg-gray-800 rounded-lg">
-    //         Guest
-    //       </button>
-    //     </Link>
-    //   </div>
-
-    //   {/* Right Panel - Dynamic Auth Form */}
-    //   <div className="w-2/3 flex items-center justify-center">
-    //     {children} {/* This will render either Register or Sign In form */}
-    //   </div>
-    // </div>
-
     <div className="w-full h-screen flex gap-3 p-3 bg-black">
       <div className="w-1/2 relative rounded-2xl overflow-hidden">
         <Bg />
@@ -49,7 +23,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
             height={1000}
             className="w-16 mb-10"
           ></Image>
-          {pathname === "/auth/signup" ? (
+          {pathname === "/auth/signup" && (
             <>
               <Link href={"/auth/signup"}>
                 <WButton labal={"Sign up"} />
@@ -57,8 +31,13 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
               <Link href={"/auth/signin"}>
                 <BButton labal={"Sign in"} />
               </Link>
+              <Link href={"/auth/guest"}>
+                <BButton labal={"Continue as a guest"} />
+              </Link>
             </>
-          ) : (
+          )}
+
+          {pathname === "/auth/signin" && (
             <>
               <Link href={"/auth/signup"}>
                 <BButton labal={"Sign up"} />
@@ -66,13 +45,31 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
               <Link href={"/auth/signin"}>
                 <WButton labal={"Sign in"} />
               </Link>
+              <Link href={"/auth/guest"}>
+                <BButton labal={"Continue as a guest"} />
+              </Link>
             </>
           )}
-          <BButton labal={"Continue as a guest"} />
+
+          {pathname === "/auth/guest" && (
+            <>
+              <Link href={"/auth/signup"}>
+                <BButton labal={"Sign up"} />
+              </Link>
+              <Link href={"/auth/signin"}>
+                <BButton labal={"Sign in"} />
+              </Link>
+              <Link href={"/auth/guest"}>
+                <WButton labal={"Continue as a guest"} />
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
-      <div className="w-1/2 px-32 flex justify-center items-center">{children}</div>
+      <div className="w-1/2 px-32 flex justify-center items-center">
+        {children}
+      </div>
     </div>
   );
 }

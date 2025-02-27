@@ -31,34 +31,34 @@ const page = () => {
       <div className="flex gap-5">
         <FormInput
           label={"First Name"}
-          placeHolder={"eg. John"}
+          placeHolder={"eg. Nakul"}
           setText={setFName}
         />
         <FormInput
           label={"Last Name"}
-          placeHolder={"eg. Clerk"}
-          setText={setFName}
+          placeHolder={"eg. Chouksey"}
+          setText={setLName}
         />
       </div>
 
       <FormInput
         label={"Email"}
-        placeHolder={"eg. johnclerkz@gmail.com"}
-        setText={setFName}
+        placeHolder={"eg. nakul@icloud.com"}
+        setText={setEmail}
       />
 
       <FormInput
         label={"Password"}
         placeHolder={"Enter your password."}
-        setText={setFName}
+        setText={setPassword}
       />
 
-      <div className="w-full py-3 text-center bg-white rounded-lg">
+      <button className="w-full py-3 text-center bg-white rounded-lg">
         <p className="font-medium text-[#252328]">Sign up</p>
-      </div>
+      </button>
 
       <p className="text-zinc-500">
-        Already have an account?{" "}
+        Already have an account?
         <Link href={"/auth/signin"}>
           <span className="text-white"> Sign in </span>
         </Link>

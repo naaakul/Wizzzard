@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 const FormInput = ({ label, placeHolder, setText }: { 
   label: string; 
   placeHolder: string; 
   setText: (text: string) => void;
 }) => {
+  const pathname = usePathname();
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -36,8 +38,8 @@ const FormInput = ({ label, placeHolder, setText }: {
         )}
       </div>
 
-      {label === "Password" && (
-        <p className='text-start text-zinc-500 font-light'>Must be at least 8 characters.</p>
+      {((label === "Password") && (pathname === "/auth/signup")) && (
+        <p className='text-start text-sm text-zinc-500'>Must be at least 8 characters.</p>
       )}
     </div>
   );

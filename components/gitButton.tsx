@@ -1,8 +1,7 @@
 import React from 'react'
 import Image from "next/image"
 
-
-const gitButton = () => {
+const GitButton = () => {
   return (
     <button className='flex w-full border-2 border-zinc-800 font-medium rounded-lg py-3 items-center justify-center gap-3'>
         <Image src={"/git.svg"} alt={"logo"} height={200} width={200} className='w-5'></Image>
@@ -11,4 +10,4 @@ const gitButton = () => {
   )
 }
 
-export default gitButton
+export default GitButton

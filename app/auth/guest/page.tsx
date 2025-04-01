@@ -20,11 +20,23 @@ const Page = () => {
     setLoading(true);
     setError("");
 
+    // try {
+    //   await signInAsGuest(name);
+    //   router.push("/");
+    // } catch (error: unknown) {
+    //   setError(error.message || "Failed to create guest account");
+    // } finally {
+    //   setLoading(false);
+    // }
     try {
       await signInAsGuest(name);
       router.push("/");
-    } catch (error: any) {
-      setError(error.message || "Failed to create guest account");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Failed to create guest account");
+      } else {
+        setError("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }

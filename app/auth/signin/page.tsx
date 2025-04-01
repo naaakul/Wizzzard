@@ -1,5 +1,6 @@
 "use client";
 
+import { FirebaseError } from "firebase/app";
 import React, { useState } from "react";
 import GitButton from "@/components/gitButton";
 import GoogleButton from "@/components/googleButton";
@@ -29,21 +30,25 @@ const Page = () => {
     setError("");
 
     try {
-      const { user, isNewUser } = await signInWithEmail(email, password);
+      const { isNewUser } = await signInWithEmail(email, password);
 
       if (isNewUser) {
         router.push("/auth/setup-username");
       } else {
         router.push("/");
       }
-    } catch (error: any) {
-      if (
-        error.code === "auth/user-not-found" ||
-        error.code === "auth/wrong-password"
-      ) {
-        setError("Invalid email or password");
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) {
+        if (
+          error.code === "auth/user-not-found" ||
+          error.code === "auth/wrong-password"
+        ) {
+          setError("Invalid email or password");
+        } else {
+          setError(error.message || "Failed to sign in");
+        }
       } else {
-        setError(error.message || "Failed to sign in");
+        setError("An unexpected error occurred");
       }
     } finally {
       setLoading(false);
@@ -55,15 +60,19 @@ const Page = () => {
     setError("");
 
     try {
-      const { user, isNewUser } = await signInWithGithub();
+      const { isNewUser } = await signInWithGithub();
 
       if (isNewUser) {
         router.push("/auth/setup-username");
       } else {
         router.push("/");
       }
-    } catch (error: any) {
-      setError(error.message || "Failed to sign in with GitHub");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Failed to sign in with GitHub");
+      } else {
+        setError("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }
@@ -74,15 +83,19 @@ const Page = () => {
     setError("");
 
     try {
-      const { user, isNewUser } = await signInWithGoogle();
+      const { isNewUser } = await signInWithGoogle();
 
       if (isNewUser) {
         router.push("/auth/setup-username");
       } else {
         router.push("/");
       }
-    } catch (error: any) {
-      setError(error.message || "Failed to sign in with Google");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Failed to sign in with Google");
+      } else {
+        setError("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }

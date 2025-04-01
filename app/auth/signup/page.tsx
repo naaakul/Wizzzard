@@ -6,7 +6,7 @@ import GoogleButton from "@/components/googleButton";
 import Link from "next/link";
 import FormInput from "@/components/formInput";
 import {
-  signUpWithEmail,
+  // signUpWithEmail,
   signInWithGithub,
   signInWithGoogle,
 } from "@/firebase/auth";
@@ -40,18 +40,23 @@ const Page = () => {
     setError("");
 
     try {
-      const { user } = await signUpWithEmail(email, password);
-
+      // const { user } = await signUpWithEmail(email, password);
+    
       router.push("/auth/setup-username");
-    } catch (error: any) {
-      if (error.code === "auth/email-already-in-use") {
-        setError("This email is already in use");
+    } catch (error: unknown) {
+      if (error instanceof Error && 'code' in error) {
+        if (error.code === "auth/email-already-in-use") {
+          setError("This email is already in use");
+        } else {
+          setError(error.message || "Failed to sign up");
+        }
       } else {
-        setError(error.message || "Failed to sign up");
+        setError("An unknown error occurred");
       }
     } finally {
       setLoading(false);
     }
+    
   };
 
   const handleGithubSignIn = async () => {
@@ -59,15 +64,19 @@ const Page = () => {
     setError("");
 
     try {
-      const { user, isNewUser } = await signInWithGithub();
+      const { isNewUser } = await signInWithGithub();
 
       if (isNewUser) {
         router.push("/auth/setup-username");
       } else {
         router.push("/");
       }
-    } catch (error: any) {
-      setError(error.message || "Failed to sign in with GitHub");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Failed to sign in with GitHub");
+      } else {
+        setError("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }
@@ -78,15 +87,19 @@ const Page = () => {
     setError("");
 
     try {
-      const { user, isNewUser } = await signInWithGoogle();
+      const { isNewUser } = await signInWithGoogle();
 
       if (isNewUser) {
         router.push("/auth/setup-username");
       } else {
         router.push("/");
       }
-    } catch (error: any) {
-      setError(error.message || "Failed to sign in with Google");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Failed to sign in with Google");
+      } else {
+        setError("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }

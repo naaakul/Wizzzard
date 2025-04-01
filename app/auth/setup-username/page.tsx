@@ -36,6 +36,19 @@ const Page = () => {
     setCheckingUsername(true);
     setError("");
 
+    // try {
+    //   const available = await isUsernameAvailable(username);
+    //   if (!available) {
+    //     setError("This username is already taken");
+    //     return false;
+    //   }
+    //   return true;
+    // } catch (error) {
+    //   setError("Error checking username availability");
+    //   return false;
+    // } finally {
+    //   setCheckingUsername(false);
+    // }
     try {
       const available = await isUsernameAvailable(username);
       if (!available) {
@@ -43,7 +56,7 @@ const Page = () => {
         return false;
       }
       return true;
-    } catch (error) {
+    } catch {
       setError("Error checking username availability");
       return false;
     } finally {
@@ -60,11 +73,23 @@ const Page = () => {
     setLoading(true);
     setError("");
 
+    // try {
+    //   await saveUserData(user, username);
+    //   router.push("/");
+    // } catch (error: any) {
+    //   setError(error.message || "Failed to set username");
+    // } finally {
+    //   setLoading(false);
+    // }
     try {
       await saveUserData(user, username);
       router.push("/");
-    } catch (error: any) {
-      setError(error.message || "Failed to set username");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Failed to set username");
+      } else {
+        setError("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }

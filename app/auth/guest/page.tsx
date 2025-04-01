@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import FormInput from "@/components/formInput";
 
-const page = () => {
+const Page = () => {
   const [name, setName] = useState("");
 
   return (
@@ -16,6 +16,7 @@ const page = () => {
       </div>
 
       <FormInput
+        value={name}
         label={"username"}
         placeHolder={"eg. naaakul"}
         setText={setName}
@@ -28,4 +29,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

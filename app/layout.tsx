@@ -2,7 +2,6 @@
 
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -14,9 +13,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body >
-        <SessionProvider>
           {children}
-        </SessionProvider>
       </body>
     </html>
   );

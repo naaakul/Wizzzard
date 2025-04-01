@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
-const FormInput = ({ label, placeHolder, setText }: { 
+const FormInput = ({ label, placeHolder, setText, value }: { 
   label: string; 
   placeHolder: string; 
   setText: (text: string) => void;
+  value: string;
 }) => {
   const pathname = usePathname();
   const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +21,7 @@ const FormInput = ({ label, placeHolder, setText }: {
           type={label === "Password" && !showPassword ? "password" : "text"}
           placeholder={placeHolder} 
           onChange={(e) => setText(e.target.value)}
+          value={value}
         />
         
         {label === "Password" && (

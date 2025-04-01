@@ -2,11 +2,12 @@
 
 import React, { useState } from "react";
 import GitButton from "@/components/gitButton";
+import GoogleButton from "@/components/googleButton";
 import Link from "next/link";
 import FormInput from "@/components/formInput";
 
-const page = () => {
-  const [email, setEmail] = useState("");
+const Page = () => {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   return (
@@ -18,7 +19,10 @@ const page = () => {
         </p>
       </div>
 
-      <GitButton />
+      <div className="flex gap-3">
+        <GitButton />
+        <GoogleButton />
+      </div>
 
       <div className=" w-full flex justify-center items-center gap-2 text-zinc-500">
         <div className="bg-zinc-500 w-full h-[1px]"></div>
@@ -27,12 +31,14 @@ const page = () => {
       </div>
 
       <FormInput
-        label={"Email"}
-        placeHolder={"eg. nakul@gmail.com"}
-        setText={setEmail}
+      value={username}
+        label={"Username"}
+        placeHolder={"naaakul"}
+        setText={setUsername}
       />
 
       <FormInput
+      value={password}
         label={"Password"}
         placeHolder={"Enter your password."}
         setText={setPassword}
@@ -43,7 +49,7 @@ const page = () => {
       </button>
 
       <p className="text-zinc-500">
-        Don't have an account?
+        Don&apos;t have an account?
         <Link href={"/auth/signup"}>
           <span className="text-white"> Sign up </span>
         </Link>
@@ -52,4 +58,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

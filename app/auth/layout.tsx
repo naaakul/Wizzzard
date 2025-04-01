@@ -12,7 +12,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <div className="w-full h-screen flex gap-3 p-3 bg-black">
+    <div className="w-full h-screen flex gap-3 p-3 bg-black ">
       <div className="w-1/2 relative rounded-2xl overflow-hidden">
         <Bg />
         <div className="h-full w-full absolute flex flex-col justify-end items-center gap-3 pb-20">

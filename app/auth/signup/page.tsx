@@ -6,7 +6,7 @@ import GoogleButton from "@/components/googleButton";
 import Link from "next/link";
 import FormInput from "@/components/formInput";
 import {
-  // signUpWithEmail,
+  signUpWithEmail,
   signInWithGithub,
   signInWithGoogle,
 } from "@/firebase/auth";
@@ -24,25 +24,27 @@ const Page = () => {
       setError("Email and password are required");
       return;
     }
-
+  
     if (password.length < 8) {
       setError("Password must be at least 8 characters");
       return;
     }
-
+  
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError("Please enter a valid email address");
       return;
     }
-
+  
     setLoading(true);
     setError("");
-
+  
     try {
-      // const { user } = await signUpWithEmail(email, password);
-    
-      router.push("/auth/setup-username");
+      const { user } = await signUpWithEmail(email, password);
+      
+      if (user) {
+        router.push("/auth/setup-username");
+      }
     } catch (error: unknown) {
       if (error instanceof Error && 'code' in error) {
         if (error.code === "auth/email-already-in-use") {
@@ -56,7 +58,6 @@ const Page = () => {
     } finally {
       setLoading(false);
     }
-    
   };
 
   const handleGithubSignIn = async () => {

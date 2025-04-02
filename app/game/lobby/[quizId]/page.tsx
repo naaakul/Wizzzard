@@ -1,16 +1,22 @@
-// app/game/lobby/[quizId]/page.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/firebase/auth";
 import { useRouter } from "next/navigation";
 import { db } from "@/firebase/config";
-import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 
 interface QuizParticipant {
   uid: string;
   username: string;
   score: number;
+}
+
+interface QuizQuestion {
+  id: string;
+  question: string;
+  options: string[];
+  correctAnswer: number;
 }
 
 interface QuizData {
@@ -19,7 +25,7 @@ interface QuizData {
   code: string;
   status: "waiting" | "active" | "completed";
   currentQuestion: number;
-  questions: any[];
+  questions: QuizQuestion[];
   participants: QuizParticipant[];
   createdBy: {
     uid: string;
@@ -34,14 +40,12 @@ const QuizLobby = ({ params }: { params: { quizId: string } }) => {
   const [error, setError] = useState("");
   const [isStarting, setIsStarting] = useState(false);
 
-  // Redirect if not logged in
   useEffect(() => {
     if (!loading && !user) {
       router.push("/auth/signin");
     }
   }, [user, loading, router]);
 
-  // Subscribe to quiz updates
   useEffect(() => {
     if (!user) return;
 
@@ -51,8 +55,7 @@ const QuizLobby = ({ params }: { params: { quizId: string } }) => {
         if (doc.exists()) {
           const data = doc.data() as Omit<QuizData, "id">;
           setQuiz({ ...data, id: doc.id });
-          
-          // If quiz is active and you are the creator, go to control page
+
           if (data.status === "active" && data.createdBy.uid === user.uid) {
             router.push(`/game/control/${params.quizId}`);
           }
@@ -68,7 +71,6 @@ const QuizLobby = ({ params }: { params: { quizId: string } }) => {
     return () => unsubscribe();
   }, [params.quizId, user, router]);
 
-  // Check if user is the creator
   useEffect(() => {
     if (!quiz || !user) return;
 
@@ -92,8 +94,6 @@ const QuizLobby = ({ params }: { params: { quizId: string } }) => {
         status: "active",
         currentQuestion: 0,
       });
-      
-      // Navigation to control page will happen automatically due to the onSnapshot
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -127,7 +127,9 @@ const QuizLobby = ({ params }: { params: { quizId: string } }) => {
 
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Participants ({quiz.participants.length})</h2>
+            <h2 className="text-xl font-semibold">
+              Participants ({quiz.participants.length})
+            </h2>
             <p className="text-zinc-400">Waiting for players to join...</p>
           </div>
 
@@ -157,7 +159,9 @@ const QuizLobby = ({ params }: { params: { quizId: string } }) => {
             onClick={startQuiz}
             disabled={isStarting || quiz.participants.length === 0}
             className={`bg-white hover:bg-gray-100 text-black px-8 py-3 rounded-lg ${
-              isStarting || quiz.participants.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+              isStarting || quiz.participants.length === 0
+                ? "opacity-50 cursor-not-allowed"
+                : ""
             }`}
           >
             {isStarting ? "Starting..." : "Start Quiz"}

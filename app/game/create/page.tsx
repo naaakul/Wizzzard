@@ -1,4 +1,3 @@
-// app/game/create/page.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -7,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { db } from "@/firebase/config";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
-// Define Question type
 interface QuestionOption {
   text: string;
   isCorrect: boolean;
@@ -15,7 +13,7 @@ interface QuestionOption {
 
 interface Question {
   text: string;
-  timeLimit: number; // in seconds
+  timeLimit: number;
   options: QuestionOption[];
 }
 
@@ -38,31 +36,41 @@ const CreateQuiz = () => {
   const [error, setError] = useState("");
   const [isCreating, setIsCreating] = useState(false);
 
-  // Redirect if not logged in
   React.useEffect(() => {
     if (!loading && !user) {
       router.push("/auth/signin");
     }
   }, [user, loading, router]);
 
-  const handleQuestionChange = (index: number, field: keyof Question, value: string | number) => {
+  const handleQuestionChange = (
+    index: number,
+    field: keyof Question,
+    value: string | number
+  ) => {
     const updatedQuestions = [...questions];
     updatedQuestions[index] = {
       ...updatedQuestions[index],
-      [field]: value
+      [field]: value,
     };
     setQuestions(updatedQuestions);
   };
 
-  const handleOptionChange = (questionIndex: number, optionIndex: number, value: string) => {
+  const handleOptionChange = (
+    questionIndex: number,
+    optionIndex: number,
+    value: string
+  ) => {
     const updatedQuestions = [...questions];
     updatedQuestions[questionIndex].options[optionIndex].text = value;
     setQuestions(updatedQuestions);
   };
 
-  const handleCorrectOptionChange = (questionIndex: number, optionIndex: number) => {
+  const handleCorrectOptionChange = (
+    questionIndex: number,
+    optionIndex: number
+  ) => {
     const updatedQuestions = [...questions];
-    // Reset all options to false
+
     updatedQuestions[questionIndex].options.forEach((option, idx) => {
       option.isCorrect = idx === optionIndex;
     });
@@ -107,7 +115,9 @@ const CreateQuiz = () => {
       }
 
       if (question.timeLimit < 5 || question.timeLimit > 300) {
-        setError(`Question ${i + 1} time limit should be between 5 and 300 seconds`);
+        setError(
+          `Question ${i + 1} time limit should be between 5 and 300 seconds`
+        );
         return false;
       }
 
@@ -140,10 +150,8 @@ const CreateQuiz = () => {
     setError("");
 
     try {
-      // Generate a 6 digit code
       const code = Math.floor(100000 + Math.random() * 900000).toString();
-      
-      // Save quiz to Firestore
+
       const quizDoc = await addDoc(collection(db, "quizzes"), {
         title: quizTitle,
         questions,
@@ -152,8 +160,8 @@ const CreateQuiz = () => {
           username: userData?.username || "Unknown user",
         },
         code,
-        status: "waiting", // waiting, active, completed
-        currentQuestion: -1, // -1 means not started
+        status: "waiting",
+        currentQuestion: -1,
         participants: [],
         createdAt: serverTimestamp(),
       });
@@ -235,13 +243,19 @@ const CreateQuiz = () => {
                 className="w-full p-3 bg-[#1A1A1A] rounded-lg"
                 value={question.timeLimit}
                 onChange={(e) =>
-                  handleQuestionChange(qIndex, "timeLimit", parseInt(e.target.value))
+                  handleQuestionChange(
+                    qIndex,
+                    "timeLimit",
+                    parseInt(e.target.value)
+                  )
                 }
               />
             </div>
 
             <div className="mb-4">
-              <label className="block mb-2">Options (select one correct answer)</label>
+              <label className="block mb-2">
+                Options (select one correct answer)
+              </label>
               {question.options.map((option, oIndex) => (
                 <div key={oIndex} className="flex items-center mb-2">
                   <input

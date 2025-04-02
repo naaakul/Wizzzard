@@ -1,11 +1,18 @@
-// app/game/join/page.tsx
 "use client";
 
 import React, { useState } from "react";
 import { useAuth } from "@/firebase/auth";
 import { useRouter } from "next/navigation";
 import { db } from "@/firebase/config";
-import { collection, query, where, getDocs, updateDoc, doc, arrayUnion } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  doc,
+  arrayUnion,
+} from "firebase/firestore";
 
 const JoinQuiz = () => {
   const { user, userData, loading } = useAuth();
@@ -14,7 +21,6 @@ const JoinQuiz = () => {
   const [error, setError] = useState("");
   const [isJoining, setIsJoining] = useState(false);
 
-  // Redirect if not logged in
   React.useEffect(() => {
     if (!loading && !user) {
       router.push("/auth/signin");
@@ -36,7 +42,6 @@ const JoinQuiz = () => {
     setError("");
 
     try {
-      // Find quiz by code
       const quizzesRef = collection(db, "quizzes");
       const q = query(quizzesRef, where("code", "==", code));
       const querySnapshot = await getDocs(q);
@@ -46,23 +51,19 @@ const JoinQuiz = () => {
         return;
       }
 
-      // Get the first quiz
       const quizDoc = querySnapshot.docs[0];
       const quizData = quizDoc.data();
 
-      // Check if quiz is still accepting participants
       if (quizData.status !== "waiting") {
         setError("This quiz has already started or ended");
         return;
       }
 
-      // Check if user is already a participant
       const existingParticipant = (quizData.participants || []).find(
-        (p: any) => p.uid === user.uid
+        (p: { uid: string }) => p.uid === user.uid
       );
 
       if (!existingParticipant) {
-        // Add user as participant
         await updateDoc(doc(db, "quizzes", quizDoc.id), {
           participants: arrayUnion({
             uid: user.uid,
@@ -72,7 +73,6 @@ const JoinQuiz = () => {
         });
       }
 
-      // Redirect to lobby
       router.push(`/game/join/${quizDoc.id}`);
     } catch (error) {
       if (error instanceof Error) {
@@ -99,9 +99,9 @@ const JoinQuiz = () => {
     <div className="w-full h-screen flex flex-col items-center justify-center bg-black text-white p-6">
       <div className="w-full max-w-md flex flex-col gap-6 items-center">
         <h1 className="text-3xl font-bold">Join a Quiz</h1>
-        
+
         {error && <p className="text-red-500">{error}</p>}
-        
+
         <div className="w-full">
           <label className="block mb-2">Enter Quiz Code</label>
           <input
@@ -113,7 +113,7 @@ const JoinQuiz = () => {
             maxLength={6}
           />
         </div>
-        
+
         <button
           className={`w-full py-3 text-center bg-white rounded-lg ${
             isJoining ? "opacity-70" : ""
@@ -125,7 +125,7 @@ const JoinQuiz = () => {
             {isJoining ? "Joining..." : "Join Quiz"}
           </p>
         </button>
-        
+
         <button
           onClick={() => router.push("/game")}
           className="px-6 py-2 border border-zinc-700 rounded-lg"
